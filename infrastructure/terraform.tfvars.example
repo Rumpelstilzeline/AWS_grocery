@@ -1,0 +1,10 @@
+# EC2 key pair name (create in AWS Console under EC2 > Key Pairs)
+key_name = "CHANGE_ME"
+
+# Your public IP with /32 so only you can SSH in
+my_ip_cidr = "1.2.3.4/32"
+
+# RDS database configuration
+db_name     = "grocerydb"
+db_username = "admin"
+# db_password = "CHANGE_ME"   # Set this locally in terraform.tfvars (DO NOT COMMIT!)
