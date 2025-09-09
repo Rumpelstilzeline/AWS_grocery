@@ -9,6 +9,7 @@ terraform {
 }
 
 provider "aws" {
-  region = var.region
-  # Uses your AWS CLI SSO "default" profile automatically.
+  region  = var.region
+  profile = "AdministratorAccess-565393040165"  # DEIN SSO-Profil
 }
+

@@ -30,3 +30,9 @@ variable "db_password" {
   sensitive   = true
   description = "Master password for RDS. Pass via env var TF_VAR_db_password."
 }
+
+variable "bucket_name" {
+  type        = string
+  description = "Globally unique S3 bucket name, e.g., grocerymate-<username>-<random>"
+}
+
