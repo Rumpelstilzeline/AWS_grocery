@@ -1,0 +1,117 @@
+# GroceryMate on AWS ☁️🛒
+
+## 1. Application Description
+
+GroceryMate is an application originally developed by **Alejandro Roman Ibanez** as part of the Masterschool program.  
+This project extends his work by adapting the application to run on the **AWS Cloud** with Infrastructure as Code (IaC) using Terraform.  
+
+The application itself is a modern, full-featured **e-commerce platform** designed for seamless online grocery shopping. It provides an intuitive user interface and a secure backend, allowing users to browse products, manage their shopping basket, and complete purchases efficiently.  
+
+### 🛒 Features
+- 🛡️ **User Authentication**: Secure registration, login, and session management.  
+- 🔒 **Protected Routes**: Access control for authenticated users.  
+- 🔎 **Product Search & Filtering**: Browse products, apply filters, and sort by category or price.  
+- ⭐ **Favorites Management**: Save preferred products.  
+- 🛍️ **Shopping Basket**: Add, view, modify, and remove items.  
+- 💳 **Checkout Process**:  
+  - Secure billing and shipping information handling  
+  - Multiple payment options  
+  - Automatic total price calculation  
+
+---
+
+## 2. AWS Deployment (Infrastructure Layer)
+
+As part of the continuation of this project, the application has been extended to support deployment on AWS.  
+The infrastructure is defined with **Terraform** and can be found in the [`infrastructure/`](infrastructure) folder of this repository.  
+
+### 2.1 AWS Resources Used
+- **Amazon EC2** – runs the web server (Apache) to host the application frontend/backend.  
+- **Amazon RDS (PostgreSQL)** – provides a managed relational database for application data.  
+- **Amazon S3** – stores static assets (e.g., images, product data).  
+- **Security Groups** – define controlled inbound/outbound traffic for EC2 and RDS.  
+- **VPC (Default)** – default networking environment is used to keep the setup lightweight.  
+
+### 2.2 Deployment Requirements
+To deploy this infrastructure, the following tools and services are required:  
+
+- **AWS CLI** (v2 or higher), configured with SSO or IAM credentials  
+- **Terraform** (>= 1.6.0)  
+- **Git** (to clone and manage the repository)  
+- **SSH Key Pair** for EC2 access (generated via AWS CLI or Console)  
+- An **AWS Account** with permissions for EC2, RDS, S3, and IAM  
+
+---
+
+## 3. Architecture Diagram
+
+![Cloud Architecture](AWS_Grocery_Architektur.png)
+
+
+---
+
+## 4. Repository Structure
+
+```bash
+AWS_grocery/
+│
+├── app/               # Core GroceryMate application code
+├── infrastructure/    # Terraform configuration files
+│   ├── providers.tf
+│   ├── variables.tf
+│   ├── ec2.tf
+│   ├── rds.tf
+│   ├── s3.tf
+│   ├── security_groups.tf
+│   └── outputs.tf
+└── README.md          # Project documentation
+
+## 5. Getting Started
+
+### Prerequisites
+- AWS Account with proper permissions  
+- Installed tools: **AWS CLI**, **Terraform**, **Git**  
+- A valid **AWS SSO login** or IAM credentials  
+- Configured **SSH Key Pair** for EC2 access  
+
+### Steps
+1. Clone this repository:  
+   ```bash
+   git clone git@github.com:Rumpelstilzeline/AWS_grocery.git
+   cd AWS_grocery/infrastructure
+
+2\. Initialize Terraform:
+
+terraform init
+
+3\. Adjust variables in terraform.tfvars
+
+\-region → AWS region
+
+\-key\_name → Name of your SSH key pair
+
+\-my\_ip\_cidr → Your public IP in CIDR format
+
+\-Database credentials (db\_name, db\_username)
+
+\-bucket\_name → S3 bucket name (must be globally unique)
+
+4\. Plan and apply the infrastructure
+
+terraform plan -out plan.out
+
+terraform apply plan.out
+
+5\. Verify deployment
+
+Access the EC2 public IP in your browser
+
+Confirm the database is running in the RDS console
+
+Check that the S3 bucket has been created
+
+6\. Credits
+
+Original application: Alejandro Roman Ibanez
+
+AWS/Terraform integration and cloud deployment: Julia Schwab (Rumpelstilzeline)
