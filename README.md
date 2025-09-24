@@ -45,7 +45,7 @@ To deploy this infrastructure, the following tools and services are required:
 
 ## 3. Architecture Diagram
 
-![Cloud Architecture](docs/AWS_Grocery_Architektur.png)
+![Cloud Architecture](docs/Cloud_architektur_Grafik.png)
 
 
 ---
