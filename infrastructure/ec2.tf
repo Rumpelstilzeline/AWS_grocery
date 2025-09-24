@@ -12,7 +12,7 @@ resource "aws_instance" "web" {
   ami                         = data.aws_ami.al2023.id
   instance_type               = "t3.micro"
   key_name                    = var.key_name
-  vpc_security_group_ids      = [aws_security_group.ec2.id]
+  vpc_security_group_ids      = [aws_security_group.instance_sg.id]
   associate_public_ip_address = true
 
   user_data = <<-EOF

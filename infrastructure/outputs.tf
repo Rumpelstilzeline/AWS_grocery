@@ -13,3 +13,9 @@ output "rds_endpoint" {
 output "rds_port" {
   value = aws_db_instance.postgres.port
 }
+
+output "alb_dns_name" {
+  description = "DNS name of the Application Load Balancer"
+  value       = aws_lb.alb.dns_name
+}
+

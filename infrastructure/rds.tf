@@ -16,7 +16,7 @@ resource "aws_db_instance" "postgres" {
   password          = var.db_password
   skip_final_snapshot = true
   db_subnet_group_name = aws_db_subnet_group.default_vpc.name
-  vpc_security_group_ids = [aws_security_group.rds.id]
+  vpc_security_group_ids = [aws_security_group.instance_sg.id]
   tags = {
     Name = "tf-postgres"
   }
