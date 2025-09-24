@@ -55,6 +55,7 @@ The updated cloud architecture is illustrated below:
 
 ## 4. Repository Structure
 
+
 ```bash
 AWS_grocery/
 │
@@ -72,55 +73,101 @@ AWS_grocery/
 │   ├── s3.tf
 │   ├── security-and-alb.tf
 │   └── variables.tf
-└── README.md                   # Project documentation
+└── README.md
+```
 
+# Project documentation
 
 ## 5. Getting Started
+### 5.1 Prerequisites
 
-### Prerequisites
-- AWS Account with proper permissions  
-- Installed tools: **AWS CLI**, **Terraform**, **Git**  
-- A valid **AWS SSO login** or IAM credentials  
-- Configured **SSH Key Pair** for EC2 access  
+AWS Account with permissions for EC2, RDS, S3, IAM, ALB, CloudWatch, and ECR
 
-### Steps
-1. Clone this repository:  
-   ```bash
-   git clone git@github.com:Rumpelstilzeline/AWS_grocery.git
-   cd AWS_grocery/infrastructure
+Installed tools:
 
-2\. Initialize Terraform:
+AWS CLI (v2 or higher), configured with SSO or IAM credentials
 
+Terraform (>= 1.6.0)
+
+Git
+
+Docker (to build and push images)
+
+A valid SSH Key Pair for EC2 access (create via AWS Console or CLI)
+
+### 5.2 Deployment Steps
+
+Clone this repository
+
+```
+git clone git@github.com:Rumpelstilzeline/AWS_grocery.git
+cd AWS_grocery/infrastructure
+```
+
+Initialize Terraform
+
+```
 terraform init
+```
 
-3\. Adjust variables in terraform.tfvars
+Configure variables
+Adjust values in terraform.tfvars (create this file if missing):
 
-\-region → AWS region
+region → AWS region (e.g., us-east-1)
 
-\-key\_name → Name of your SSH key pair
+key_name → SSH key pair name (as in AWS Console)
 
-\-my\_ip\_cidr → Your public IP in CIDR format
+my_ip_cidr → Your public IP in CIDR format (e.g., 84.57.145.46/32)
 
-\-Database credentials (db\_name, db\_username)
+db_name, db_username, db_password → Database credentials
 
-\-bucket\_name → S3 bucket name (must be globally unique)
+bucket_name → Globally unique S3 bucket name
 
-4\. Plan and apply the infrastructure
+Any scaling parameters (min/max instance count, desired capacity)
 
+Build & Push Docker image to ECR
+
+```
+cd ../backend
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <your_account_id>.dkr.ecr.us-east-1.amazonaws.com
+docker build -t grocery-app .
+docker tag grocery-app:latest <your_account_id>.dkr.ecr.us-east-1.amazonaws.com/grocery-app:latest
+docker push <your_account_id>.dkr.ecr.us-east-1.amazonaws.com/grocery-app:latest
+```
+Provision the infrastructure
+```
+cd ../infrastructure
 terraform plan -out plan.out
-
 terraform apply plan.out
+```
+Verify deployment
 
-5\. Verify deployment
+Run terraform output alb_dns_name to get the Application Load Balancer URL
 
-Access the EC2 public IP in your browser
+Open the URL in your browser → GroceryMate should be available
 
-Confirm the database is running in the RDS console
+Confirm:
 
-Check that the S3 bucket has been created
+EC2 instances are running inside an Auto Scaling Group
 
-6\. Credits
+RDS database is created and reachable from EC2s
+
+S3 bucket exists
+
+CloudWatch monitors ASG/EC2
+
+# 6. Cleanup
+
+To avoid costs, destroy all resources when finished:
+
+```
+terraform destroy
+```
+
+If some resources (like security groups or ECR repos with images) cannot be destroyed automatically, delete them manually via the AWS Console.
+
+# 7. Credits
 
 Original application: Alejandro Roman Ibanez
 
-AWS/Terraform integration and cloud deployment: Julia Schwab (Rumpelstilzeline)
+AWS deployment and Terraform IaC: Rumpelstilzeline
