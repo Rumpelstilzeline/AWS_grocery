@@ -85,47 +85,47 @@ AWS Account with permissions for EC2, RDS, S3, IAM, ALB, CloudWatch, and ECR
 
 Installed tools:
 
-AWS CLI (v2 or higher), configured with SSO or IAM credentials
+- AWS CLI (v2 or higher), configured with SSO or IAM credentials
 
-Terraform (>= 1.6.0)
+- Terraform (>= 1.6.0)
 
-Git
+- Git
 
-Docker (to build and push images)
+- Docker (to build and push images)
 
-A valid SSH Key Pair for EC2 access (create via AWS Console or CLI)
+- A valid SSH Key Pair for EC2 access (create via AWS Console or CLI)
 
 ### 5.2 Deployment Steps
 
-Clone this repository
+1. Clone this repository
 
 ```
 git clone git@github.com:Rumpelstilzeline/AWS_grocery.git
 cd AWS_grocery/infrastructure
 ```
 
-Initialize Terraform
+1. Initialize Terraform
 
 ```
 terraform init
 ```
 
-Configure variables
+2. Configure variables
 Adjust values in terraform.tfvars (create this file if missing):
 
-region → AWS region (e.g., us-east-1)
+- region → AWS region (e.g., us-east-1)
 
-key_name → SSH key pair name (as in AWS Console)
+- key_name → SSH key pair name (as in AWS Console)
 
-my_ip_cidr → Your public IP in CIDR format (e.g., 84.57.145.46/32)
+- my_ip_cidr → Your public IP in CIDR format (e.g., 84.57.145.46/32)
 
-db_name, db_username, db_password → Database credentials
+- db_name, db_username, db_password → Database credentials
 
-bucket_name → Globally unique S3 bucket name
+- bucket_name → Globally unique S3 bucket name
 
-Any scaling parameters (min/max instance count, desired capacity)
+- Any scaling parameters (min/max instance count, desired capacity)
 
-Build & Push Docker image to ECR
+3. Build & Push Docker image to ECR
 
 ```
 cd ../backend
@@ -134,27 +134,27 @@ docker build -t grocery-app .
 docker tag grocery-app:latest <your_account_id>.dkr.ecr.us-east-1.amazonaws.com/grocery-app:latest
 docker push <your_account_id>.dkr.ecr.us-east-1.amazonaws.com/grocery-app:latest
 ```
-Provision the infrastructure
+4. Provision the infrastructure
 ```
 cd ../infrastructure
 terraform plan -out plan.out
 terraform apply plan.out
 ```
-Verify deployment
+5. Verify deployment
 
-Run terraform output alb_dns_name to get the Application Load Balancer URL
+- Run terraform output alb_dns_name to get the Application Load Balancer URL
 
-Open the URL in your browser → GroceryMate should be available
+- Open the URL in your browser → GroceryMate should be available
 
-Confirm:
+- Confirm:
 
-EC2 instances are running inside an Auto Scaling Group
+  - EC2 instances are running inside an Auto Scaling Group
 
-RDS database is created and reachable from EC2s
+  - RDS database is created and reachable from EC2s
 
-S3 bucket exists
+  - S3 bucket exists
 
-CloudWatch monitors ASG/EC2
+  - CloudWatch monitors ASG/EC2
 
 # 6. Cleanup
 
@@ -168,6 +168,6 @@ If some resources (like security groups or ECR repos with images) cannot be dest
 
 # 7. Credits
 
-Original application: Alejandro Roman Ibanez
+- Original application: Alejandro Roman Ibanez
 
-AWS deployment and Terraform IaC: Rumpelstilzeline
+- AWS deployment and Terraform IaC: Rumpelstilzeline
